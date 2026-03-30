@@ -19,26 +19,39 @@
             background-position: center;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 10px;
+            padding-bottom: 40px;
         }
-
         .forma {
-            background: red;
+            cursor: pointer;
         }
         .span {
             grid-column: span 2;
             width: 200px;
             justify-self: center;
+            margin-top: 150px;
         } 
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="forma span"></div>
-        <div class="forma"></div>
-        <div class="forma"></div>
+        <div class="forma span" onclick="tensao()"></div>
+        <div class="forma" onclick="corrente()"></div>
+        <div class="forma" onclick="resistencia()"></div>
     </div>
+    <script>
+        function tensao(){
+            window.location.href = "calcular_tensao.php";
+        }
+        function corrente(){
+            window.location.href = "calcular_corrente.php";
+        }
+        function resistencia(){
+            window.location.href = "calcular_resistencia.php";
+        }
+    </script>
 </body>
+
 
 </html>

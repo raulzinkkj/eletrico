@@ -25,12 +25,17 @@
         .forma {
             background: red;
         }
+        .span {
+            grid-column: span 2;
+            width: 200px;
+            justify-self: center;
+        } 
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="forma"></div>
+        <div class="forma span"></div>
         <div class="forma"></div>
         <div class="forma"></div>
     </div>

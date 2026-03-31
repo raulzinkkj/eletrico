@@ -1,7 +1,20 @@
 <?php
-$potencia = $_POST['potencia'];
-$tempo = $_POST['tempo'];
-$consumo = $potencia * $tempo;
+include 'conexao/conexao.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $potencia = $_POST['potencia'];
+    $tempo = $_POST['tempo'];
+    $consumo = $potencia * $tempo;
+
+    $sql = "INSERT INTO consumo(potencia, tempo, consumo)
+        VALUES(:potencia, :tempo, :consumo)";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->bindParam(':potencia', $potencia);
+    $stmt->bindParam(':tempo', $tempo);
+    $stmt->bindParam(':consumo', $consumo);
+}
+
 
 ?>
 

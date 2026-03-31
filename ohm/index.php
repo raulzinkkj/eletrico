@@ -10,6 +10,13 @@
             margin: 0;
             padding: 0;
         }
+        body{
+            background: rgb(255, 255, 216);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
         .container {
             width: 450px;

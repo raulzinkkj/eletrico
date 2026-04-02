@@ -198,6 +198,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-left: 5px solid #4caf50;
             font-weight: bold;
             color: #2e7d32;
+            margin-bottom: 15px;
+            border-radius: 5px;
         }
 
         .instructions {
@@ -259,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form action="" method="post">
         <div class="input-group">
             <label for="questao">Questão :</label>
-            <input type="number" name="questao" id="questao" placeholder="Questão">
+            <input type="text" name="questao" id="questao" placeholder="Questão">
         </div>
 
         <div class="input-group">

@@ -240,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="bottom-row">
                 <div class="section" onclick="focusInput ('v')">
-                    <div class="label">V</div>
+                    <div class="label">E</div>
                     <div class="sub-label">Tensão (Volts)</div>
                 </div>
 
@@ -270,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="input-group">
-            <label for="v">Tensão (V):</label>
+            <label for="v">Tensão (E):</label>
             <input type="number" name="tensao" id="v" placeholder="Volts (V)">
         </div>
 

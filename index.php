@@ -14,6 +14,7 @@
             <ul>
                 <li><a href="eletrica2.0/lei_de_ohm/index.php">Triângulo da Lei de Ohm</a></li>
                 <li><a href="eletrica2.0/potencia/index.php">Triângulo da Potência</a></li>
+                <li><a href="eletrica2.0/resistores/index.php">Associação de Resistores</a></li>
             </ul>
         </nav>
     </section>

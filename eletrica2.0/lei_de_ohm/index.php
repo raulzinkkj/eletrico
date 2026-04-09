@@ -285,12 +285,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php echo $resultado; ?>
             </div>
             <button type="submit">Salvar</button>
+            <button type="button" onclick="voltar()">Voltar</button>
         </form>
     </div>
 
     <script>
         function focusInput(id) {
             document.getElementById(id).focus();
+        }
+
+        function voltar() {
+            window.location.href = "../../menu.php";
         }
     </script>
 </body>

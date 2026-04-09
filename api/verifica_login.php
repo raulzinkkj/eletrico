@@ -14,6 +14,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($user) {
     $_SESSION['usuario'] = $user['nome_usuario'];
+    $_SESSION['id'] = $user['id_usuario'];
     header("Location:../menu.php");
 } else {
     echo "Usuario ou senha inválidos!";

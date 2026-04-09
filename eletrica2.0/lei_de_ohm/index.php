@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['id'])) {
     header("Location:index.php");
     exit;
 }
@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $v = $_POST['tensao'];
     $i = $_POST['corrente'];
     $r = $_POST['resistencia'];
+    $id_usuario = $_SESSION['id'];
 
     if ($v == "" && $i != "" && $r != "") {
         $v = $i * $r;
@@ -42,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $resultado = "Preencha exatamente 2 campos!";
     }
-    $sql = "INSERT INTO ohm (resistencia, corrente, tensao, tipo, questao) VALUES (:resistencia, :corrente, :tensao, :tipo, :questao)";
+    $sql = "INSERT INTO ohm (resistencia, corrente, tensao, tipo, questao, id_usuario) VALUES (:resistencia, :corrente, :tensao, :tipo, :questao, :id_usuario)";
 
     $stmt = $conexao->prepare($sql);
     $stmt->bindParam(':resistencia', $r);
@@ -50,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':tensao', $v);
     $stmt->bindParam(':tipo', $tipo);
     $stmt->bindParam(':questao', $questao);
+    $stmt->bindParam(':id_usuario', $id_usuario);
     $stmt->execute();
 }
 

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['usuario'])) {
+if (!isset($_SESSION['id'])) {
     header("Location:index.php");
     exit;
 }
@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $v = $_POST['tensao'];
     $i = $_POST['corrente'];
     $p = $_POST['potencia'];
+    $id_usuario = $_SESSION['id'];
 
    
     if ($p == "" && $v != "" && $i != "") {
@@ -49,8 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     
-    $sql = "INSERT INTO potencia (potencia, corrente, tensao, tipo, questao) 
-            VALUES (:potencia, :corrente, :tensao, :tipo, :questao)";
+    $sql = "INSERT INTO potencia (potencia, corrente, tensao, tipo, questao, id_usuario) 
+            VALUES (:potencia, :corrente, :tensao, :tipo, :questao, :id_usuario)";
 
     $stmt = $conexao->prepare($sql);
     $stmt->bindParam(':potencia', $p);
@@ -58,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':tensao', $v);
     $stmt->bindParam(':tipo', $tipo);
     $stmt->bindParam(':questao', $questao);
+    $stmt->bindParam(':id_usuario', $id_usuario);
     $stmt->execute();
 }
 ?>

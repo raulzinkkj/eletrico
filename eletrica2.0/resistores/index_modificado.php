@@ -2,13 +2,13 @@
 session_start();
 
 if (!isset($_SESSION['id'])) {
-    header("Location:login.php");
+    header("Location:index.php");
     exit;
 }
 
 /**
  * Sistema de Associação de Resistores (Misto e com Fonte de Energia)
- * Versão 2.0 - Com salvamento de ID do usuário e exportação para PDF
+ * MODIFICADO: Salva ID do usuário e permite exportar para PDF
  */
 
 // 1. Conexão com o Banco de Dados
@@ -22,11 +22,11 @@ try {
     $db_error = $e->getMessage();
 }
 
-// 2. Busca de Histórico do usuário logado
+// 2. Busca de Histórico
 $historico = [];
 if (isset($conexao) && $conexao instanceof PDO) {
     try {
-        // Busca apenas registros do usuário logado
+        // Modificado: Busca apenas registros do usuário logado
         $stmt = $conexao->prepare("SELECT * FROM resistores WHERE id_usuario = ? ORDER BY id_resistores DESC LIMIT 15");
         $stmt->execute([$_SESSION['id']]);
         $historico = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -114,24 +114,15 @@ if (isset($conexao) && $conexao instanceof PDO) {
             background: #0dcaf0;
             color: #000;
         }
-
-        .user-badge {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
 
 <body>
 
     <nav class="navbar navbar-dark bg-dark mb-4">
-        <div class="container d-flex justify-content-between align-items-center">
-            <span class="navbar-brand fw-bold mb-0"><i class="bi bi-battery-charging me-2 text-warning"></i> Simulador de Circuitos DC</span>
-            <span class="user-badge">
-                <i class="bi bi-person-circle me-1"></i> Usuário ID: <?php echo htmlspecialchars($_SESSION['id']); ?>
-            </span>
+        <div class="container">
+            <span class="navbar-brand fw-bold"><i class="bi bi-battery-charging me-2 text-warning"></i> Simulador de Circuitos DC</span>
+            <span class="text-light small">Usuário ID: <?php echo htmlspecialchars($_SESSION['id']); ?></span>
         </div>
     </nav>
 
@@ -354,16 +345,7 @@ if (isset($conexao) && $conexao instanceof PDO) {
                     valores: blocks,
                     resultado: resTotal
                 })
-            }).then(response => response.json())
-              .then(data => {
-                  if (data.sucesso) {
-                      alert("✓ Cálculo salvo com sucesso! ID: " + data.id_calculo);
-                      location.reload();
-                  } else {
-                      alert("✗ Erro ao salvar: " + data.erro);
-                  }
-              })
-              .catch(err => alert("Erro na requisição: " + err));
+            }).then(() => location.reload());
         }
 
         /**
@@ -388,37 +370,23 @@ if (isset($conexao) && $conexao instanceof PDO) {
             // Cria o conteúdo HTML para o PDF
             const htmlContent = `
                 <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 800px;">
-                    <h1 style="text-align: center; color: #333; margin-bottom: 30px;">Relatório de Circuito de Resistores</h1>
+                    <h1 style="text-align: center; color: #333;">Relatório de Circuito de Resistores</h1>
                     
-                    <div style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-left: 4px solid #0d6efd; border-radius: 5px;">
-                        <h3 style="margin-top: 0; color: #0d6efd;">Informações do Cálculo</h3>
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <tr>
-                                <td style="padding: 8px; font-weight: bold;">Data/Hora:</td>
-                                <td style="padding: 8px;">${dataAtual}</td>
-                            </tr>
-                            <tr style="background-color: #fff;">
-                                <td style="padding: 8px; font-weight: bold;">Tensão (V):</td>
-                                <td style="padding: 8px;">${V.toFixed(1)} V</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px; font-weight: bold;">Resistência Total:</td>
-                                <td style="padding: 8px;">${resTotal.toFixed(2)} Ω</td>
-                            </tr>
-                            <tr style="background-color: #fff;">
-                                <td style="padding: 8px; font-weight: bold;">Corrente Total (I):</td>
-                                <td style="padding: 8px;">${I.toFixed(3)} A</td>
-                            </tr>
-                        </table>
+                    <div style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-left: 4px solid #0d6efd;">
+                        <h3 style="margin-top: 0;">Informações do Cálculo</h3>
+                        <p><strong>Data/Hora:</strong> ${dataAtual}</p>
+                        <p><strong>Tensão (V):</strong> ${V.toFixed(1)} V</p>
+                        <p><strong>Resistência Total:</strong> ${resTotal.toFixed(2)} Ω</p>
+                        <p><strong>Corrente Total (I):</strong> ${I.toFixed(3)} A</p>
                     </div>
 
                     <div style="margin: 20px 0;">
-                        <h3 style="color: #333; border-bottom: 2px solid #0d6efd; padding-bottom: 10px;">Esquemático do Circuito</h3>
-                        <img src="${circuitoImagem}" style="width: 100%; max-width: 600px; border: 2px solid #ddd; border-radius: 8px; margin-top: 15px;">
+                        <h3>Esquemático do Circuito</h3>
+                        <img src="${circuitoImagem}" style="width: 100%; max-width: 600px; border: 2px solid #ddd; border-radius: 8px;">
                     </div>
 
-                    <div style="margin: 20px 0; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px;">
-                        <h3 style="margin-top: 0; color: #333;">Detalhes dos Componentes</h3>
+                    <div style="margin: 20px 0; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd;">
+                        <h3 style="margin-top: 0;">Detalhes dos Componentes</h3>
                         ${gerarTabelaComponentes()}
                     </div>
 
@@ -445,17 +413,16 @@ if (isset($conexao) && $conexao instanceof PDO) {
          * Gera tabela HTML com detalhes dos componentes
          */
         function gerarTabelaComponentes() {
-            let html = '<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
-            html += '<tr style="background-color: #0d6efd; color: white;"><th style="padding: 10px; text-align: left; border: 1px solid #0d6efd;">Bloco</th><th style="padding: 10px; text-align: left; border: 1px solid #0d6efd;">Tipo</th><th style="padding: 10px; text-align: left; border: 1px solid #0d6efd;">Resistores</th></tr>';
+            let html = '<table style="width: 100%; border-collapse: collapse;">';
+            html += '<tr style="background-color: #0d6efd; color: white;"><th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Bloco</th><th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Tipo</th><th style="padding: 8px; text-align: left; border: 1px solid #ddd;">Resistores</th></tr>';
 
             blocks.forEach((block, idx) => {
                 const tipoTexto = block.tipo === 'serie' ? 'Série' : 'Paralelo';
                 const resistoresTexto = block.valores.map(v => v.toFixed(2) + ' Ω').join(', ');
-                const bgColor = idx % 2 === 0 ? '#fff' : '#f9f9f9';
-                html += `<tr style="background-color: ${bgColor};">
-                    <td style="padding: 10px; border: 1px solid #ddd;">Bloco ${idx + 1}</td>
-                    <td style="padding: 10px; border: 1px solid #ddd;">${tipoTexto}</td>
-                    <td style="padding: 10px; border: 1px solid #ddd;">${resistoresTexto}</td>
+                html += `<tr style="border: 1px solid #ddd;">
+                    <td style="padding: 8px; border: 1px solid #ddd;">Bloco ${idx + 1}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${tipoTexto}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${resistoresTexto}</td>
                 </tr>`;
             });
 

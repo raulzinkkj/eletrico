@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Verifica se o usuário está autenticado
 if (!isset($_SESSION['id'])) {
     http_response_code(401);
     echo json_encode(['erro' => 'Usuário não autenticado']);
@@ -31,17 +30,17 @@ if (!$input) {
 }
 
 // 3. Extrai e valida os dados
-$tipo = $input['tipo'] ?? 'misto';
+$tipo = $input['tipo'] ?? 'desconhecido';
 $valores = json_encode($input['valores'] ?? []);
 $resultado = floatval($input['resultado'] ?? 0);
-$id_usuario = $_SESSION['id']; // Captura o ID do usuário logado
+$id_usuario = $_SESSION['id']; // MODIFICADO: Captura o ID do usuário logado
 
 // 4. Insere no banco de dados
 try {
-    // Prepara a inserção com os campos corretos da tabela
+    // MODIFICADO: Adiciona id_usuario à inserção
     $stmt = $conexao->prepare("
-        INSERT INTO resistores (id_usuario, tipo_resistores, valores_resistores, resultado_resistores, resolvido_resistores)
-        VALUES (?, ?, ?, ?, 0)
+        INSERT INTO resistores (id_usuario, tipo_resistores, valores_resistores, resultado_resistores, resolvido_resistores, data_criacao)
+        VALUES (?, ?, ?, ?, 0, NOW())
     ");
     
     $stmt->execute([
@@ -51,13 +50,11 @@ try {
         $resultado
     ]);
 
-    $id_calculo = $conexao->lastInsertId();
-
     http_response_code(200);
     echo json_encode([
         'sucesso' => true,
         'mensagem' => 'Cálculo salvo com sucesso!',
-        'id_calculo' => $id_calculo,
+        'id_calculo' => $conexao->lastInsertId(),
         'id_usuario' => $id_usuario
     ]);
 } catch (PDOException $e) {

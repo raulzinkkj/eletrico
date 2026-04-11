@@ -19,13 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $p = $_POST['potencia'];
     $id_usuario = $_SESSION['id'];
 
-   
+
     if ($p == "" && $v != "" && $i != "") {
         $p = $v * $i;
         $resultado = "Potência (P) = $p W";
         $tipo = "W = ";
-
-    
     } elseif ($v == "" && $p != "" && $i != "") {
         if ($i == 0) {
             $resultado = "Erro: divisão por zero";
@@ -34,8 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $resultado = "Tensão (V) = $v V";
             $tipo = "V = ";
         }
-
-    
     } elseif ($i == "" && $p != "" && $v != "") {
         if ($v == 0) {
             $resultado = "Erro: divisão por zero";
@@ -44,12 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $resultado = "Corrente (I) = $i A";
             $tipo = "A = ";
         }
-
     } else {
         $resultado = "Preencha exatamente 2 campos!";
     }
 
-    
+
     $sql = "INSERT INTO potencia (potencia, corrente, tensao, tipo, questao, id_usuario) 
             VALUES (:potencia, :corrente, :tensao, :tipo, :questao, :id_usuario)";
 
@@ -228,11 +223,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: none;
             font-weight: bold;
             font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .pe {
+            background: #4843d4;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
+    <header>
+        <p class="pe">
+            Bem vindo <?php echo $_SESSION['nome_usuario']; ?>
+        </p>
+    </header>
+
     <h1>Triângulo da Potência</h1>
 
     <div class="container">
@@ -268,36 +279,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="calc-panel">
         <p class="instructions">Preencha dois campos para calcular o terceiro:</p>
         <form action="" method="post">
-        <div class="input-group">
-            <label for="questao">Questão :</label>
-            <input type="text" name="questao" id="questao" placeholder="Questão">
-        </div>
+            <div class="input-group">
+                <label for="questao">Questão :</label>
+                <input type="text" name="questao" id="questao" placeholder="Questão">
+            </div>
 
-        <div class="input-group">
-            <label for="p">Potência (V):</label>
-            <input type="number" name="potencia" id="p" placeholder="Watts (W)">
-        </div>
+            <div class="input-group">
+                <label for="p">Potência (V):</label>
+                <input type="number" name="potencia" id="p" placeholder="Watts (W)">
+            </div>
 
-        <div class="input-group">
-            <label for="v">Tensão (E):</label>
-            <input type="number" name="tensao" id="v" placeholder="Volts (V)">
-        </div>
+            <div class="input-group">
+                <label for="v">Tensão (E):</label>
+                <input type="number" name="tensao" id="v" placeholder="Volts (V)">
+            </div>
 
-        <div class="input-group">
-            <label for="i">Corrente (I):</label>
-            <input type="number" name="corrente" id="i" placeholder="Ampéres (A)">
-        </div>
+            <div class="input-group">
+                <label for="i">Corrente (I):</label>
+                <input type="number" name="corrente" id="i" placeholder="Ampéres (A)">
+            </div>
 
-        <div class="resultado" style="display: <?php echo ($resultado != "") ? 'block' : 'none'; ?>">
+            <div class="resultado" style="display: <?php echo ($resultado != "") ? 'block' : 'none'; ?>">
                 <?php echo $resultado; ?>
             </div>
-        <button type="submit">Salvar</button>
-    </form>
+            <button type="submit">Salvar</button>
+            <button type="button" onclick="voltar()">Voltar</button>
+        </form>
     </div>
 
     <script>
         function focusInput(id) {
             document.getElementById(id).focus();
+        }
+
+        function voltar() {
+            window.location.href = "../../menu.php";
         }
     </script>
 </body>

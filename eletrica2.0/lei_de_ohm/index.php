@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 if (!isset($_SESSION['id'])) {
     header("Location:index.php");
     exit;
@@ -34,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } elseif ($r == "" && $v != "" && $i != "") {
         if ($i == 0) {
-            $resultado = "Erro: divisão por zero";            
+            $resultado = "Erro: divisão por zero";
         } else {
             $r = $v / $i;
             $resultado = "Resistência (R) = $r Ω";
@@ -221,11 +222,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: none;
             font-weight: bold;
             font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .pe {
+            background: #2c3e50;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
+    <header>
+        <p class="pe">
+            Bem vindo <?php echo $_SESSION['nome_usuario']; ?>
+        </p>
+    </header>
+
     <h1>Triângulo Da Lei de Ohm</h1>
 
     <div class="container">
@@ -298,6 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             window.location.href = "../../menu.php";
         }
     </script>
+
 </body>
 
 </html>

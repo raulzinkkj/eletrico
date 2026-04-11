@@ -130,8 +130,13 @@ if (isset($conexao) && $conexao instanceof PDO) {
         <div class="container d-flex justify-content-between align-items-center">
             <span class="navbar-brand fw-bold mb-0"><i class="bi bi-battery-charging me-2 text-warning"></i> Simulador de Circuitos DC</span>
             <span class="user-badge">
-                <i class="bi bi-person-circle me-1"></i> Usuário ID: <?php echo htmlspecialchars($_SESSION['id']); ?>
+                <i class="bi bi-person-circle me-1"></i> Bem vindo <?php echo ($_SESSION['nome_usuario']); ?>
+                
             </span>
+
+            <button class="btn btn-outline-light btn-sm" onclick="voltar()">
+                <i class="bi bi-arrow-left"></i> Voltar
+            </button>
         </div>
     </nav>
 
@@ -345,25 +350,25 @@ if (isset($conexao) && $conexao instanceof PDO) {
             if (blocks.length === 0) return alert("Adicione componentes!");
 
             fetch("salvar.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    tipo: "misto_avançado",
-                    valores: blocks,
-                    resultado: resTotal
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        tipo: "misto_avançado",
+                        valores: blocks,
+                        resultado: resTotal
+                    })
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.sucesso) {
+                        alert("✓ Cálculo salvo com sucesso! ID: " + data.id_calculo);
+                        location.reload();
+                    } else {
+                        alert("✗ Erro ao salvar: " + data.erro);
+                    }
                 })
-            }).then(response => response.json())
-              .then(data => {
-                  if (data.sucesso) {
-                      alert("✓ Cálculo salvo com sucesso! ID: " + data.id_calculo);
-                      location.reload();
-                  } else {
-                      alert("✗ Erro ao salvar: " + data.erro);
-                  }
-              })
-              .catch(err => alert("Erro na requisição: " + err));
+                .catch(err => alert("Erro na requisição: " + err));
         }
 
         /**
@@ -432,9 +437,18 @@ if (isset($conexao) && $conexao instanceof PDO) {
             const opt = {
                 margin: 10,
                 filename: `circuito_${new Date().getTime()}.pdf`,
-                image: { type: 'png', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+                image: {
+                    type: 'png',
+                    quality: 0.98
+                },
+                html2canvas: {
+                    scale: 2
+                },
+                jsPDF: {
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                }
             };
 
             // Gera o PDF
@@ -618,6 +632,10 @@ if (isset($conexao) && $conexao instanceof PDO) {
             addBlock('serie');
             calcular();
         };
+
+        function voltar() {
+            window.location.href = "../../menu.php";
+        }
     </script>
 
 </body>

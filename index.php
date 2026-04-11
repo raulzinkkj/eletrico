@@ -18,9 +18,8 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* melhor centralização */
             font-family: sans-serif;
-            flex-direction: column;
+            flex-direction: column; 
         }
 
         .wave-group {

@@ -55,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':id_usuario', $id_usuario);
     $stmt->execute();
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -233,6 +232,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: white;
             font-weight: bold;
         }
+
+        .cabecalho {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            background: #2c3e50;
+            color: white;
+            padding: 12px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+        }
+
+        .linha {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            background: #ffffff;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cel_cabecalho {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .resultados h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .resultados {
+            margin-bottom: 50px;
+        }
+
+        .centralizar {
+            display: flex;
+            justify-content: center;
+        }
     </style>
 </head>
 
@@ -304,6 +340,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">Salvar</button>
             <button type="button" onclick="voltar()">Voltar</button>
         </form>
+    </div>
+
+    <div class="resultados">
+        <div class="centralizar">
+            <h3>Seus cálculos:</h3>
+        </div>
+        <?php
+        $sql = "SELECT * FROM ohm";
+        $stmt = $conexao->prepare($sql);
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+
+            echo "<div class='cabecalho'>";
+            echo "<div class='cel_cabecalho'>Questão</div>";
+            echo "<div class='cel_cabecalho'>Tipo</div>";
+            echo "<div class='cel_cabecalho'>Tensão</div>";
+            echo "<div class='cel_cabecalho'>Corrente</div>";
+            echo "<div class='cel_cabecalho'>Resistência</div>";
+
+
+            echo "</div>";
+
+            while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                echo "<div class='linha'>";
+                echo "<div class='cel_cabecalho'>{$linha['questao']}</div>";
+                echo "<div class='cel_cabecalho'>{$linha['tipo']}</div>";
+                echo "<div class='cel_cabecalho'>{$linha['tensao']}</div>";
+                echo "<div class='cel_cabecalho'>{$linha['corrente']}</div>";
+                echo "<div class='cel_cabecalho'>{$linha['resistencia']}</div>";
+                echo "</div>";
+            }
+        }
+
+        ?>
+
     </div>
 
     <script>
